@@ -1,5 +1,7 @@
 package com.ford.sast.jenkins
 
+import com.ford.sast.jenkins.LineOfBusiness.LoB
+
 /**
  * Provides standardized methods for scanning source code in the Jenkins workspace 
  * with Checkmarx CxSAST and CxOSA scanners.
