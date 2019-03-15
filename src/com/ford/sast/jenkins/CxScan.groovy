@@ -17,8 +17,10 @@ class CxScan implements Serializable {
 	private static final String ORG = 'CxServer'
 	private static final String SP = 'Ford'
 	
-	final LineOfBusiness lob
-	final ProjectType projectType
+	//final LineOfBusiness lob
+	//final ProjectType projectType
+	final String lob
+	final String projectType
 	final String applicationID
 	final String applicationName
 	final String applicationTeam
@@ -56,31 +58,31 @@ class CxScan implements Serializable {
 		return "${applicationName}-${componentName}-${branch}"
 	}
 	
-	def doFullScan(dsl) {
-		doFullScan(dsl, '', '')
+	def doFullScan(script) {
+		doFullScan(script, '', '')
 	} 
 
-	def doFullScan(dsl, String excludeFolders) {
-		doFullScan(dsl, excludeFolders, '')
+	def doFullScan(script, String excludeFolders) {
+		doFullScan(script, excludeFolders, '')
 	}
 	
-	def doFullScan(dsl, String excludeFolders, String excludePatterns) {
-		dsl.echo 'Running full scan...'
-		printConfig(dsl)
+	def doFullScan(script, String excludeFolders, String excludePatterns) {
+		script.echo 'Running full scan...'
+		printConfig(script)
 	}
 
-	def printConfig(dsl) {
-		dsl.echo '\t' + 'LineOfBusiness: ' + lob
-		dsl.echo '\t' + 'ProjectType: ' + projectType
-		dsl.echo '\t' + 'ApplicationID: ' + applicationID
-		dsl.echo '\t' + 'ApplicationName: ' + applicationName
-		dsl.echo '\t' + 'ApplicationTeam: ' + applicationTeam
-		dsl.echo '\t' + 'ComponentName: ' + componentName
-		dsl.echo '\t' + 'branch: ' + branch
-		dsl.echo '\t' + 'Environment: ' + environment
-		dsl.echo '\t' + 'TeamPath: ' + teamPath
-		dsl.echo '\t' + 'ProjectName: ' + projectName
-		dsl.echo '\t' + 'ExclusionFolders: ' + exclusionFolders
-		dsl.echo '\t' + 'ExclusionPatterns: ' + exclusionPatterns
+	def printConfig(script) {
+		script.echo '\t' + 'LineOfBusiness: ' + lob
+		script.echo '\t' + 'ProjectType: ' + projectType
+		script.echo '\t' + 'ApplicationID: ' + applicationID
+		script.echo '\t' + 'ApplicationName: ' + applicationName
+		script.echo '\t' + 'ApplicationTeam: ' + applicationTeam
+		script.echo '\t' + 'ComponentName: ' + componentName
+		script.echo '\t' + 'branch: ' + branch
+		script.echo '\t' + 'Environment: ' + environment
+		script.echo '\t' + 'TeamPath: ' + teamPath
+		script.echo '\t' + 'ProjectName: ' + projectName
+		script.echo '\t' + 'ExclusionFolders: ' + exclusionFolders
+		script.echo '\t' + 'ExclusionPatterns: ' + exclusionPatterns
 	}	
 }
