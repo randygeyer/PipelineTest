@@ -22,6 +22,7 @@ class CxScan implements Serializable {
     //final ProjectType projectType
     final def script
     final String lob
+    private LineOfBusiness group
     final String projectType
     final String applicationID
     final String applicationName
@@ -63,12 +64,13 @@ class CxScan implements Serializable {
     }
 
     private void init() {
+        this.group = LineOfBusiness.parse(this.lob)
         this.teamPath = buildTeamPath()
         this.projectName = buildProjectName()
     }
 
     private String buildTeamPath() {
-        return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
+        return ORG + PATH_SEP + SP + PATH_SEP + group.toString() + PATH_SEP + applicationTeam
     }
 
     private String buildProjectName() {
@@ -84,7 +86,7 @@ class CxScan implements Serializable {
 
         def message = """
             Running scan...
-            \tLineOfBusiness: $lob
+            \tLineOfBusiness: $group
             \tProjectType: $projectType
             \tApplicationID: $applicationID
             \tApplicationName: $applicationName

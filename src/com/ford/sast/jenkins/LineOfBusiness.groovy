@@ -34,4 +34,7 @@ class LineOfBusiness {
     static final String GDIA = LoB.GDIA
     static final String IT = LoB.IT
     
+    static def LoB parse(String lob) {
+        return lob as LoB
+    }
 }
