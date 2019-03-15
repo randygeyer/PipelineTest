@@ -80,8 +80,10 @@ class CxScan implements Serializable {
         filterPattern ?: this.filterPattern + ',' + filterPattern
     }
 
-    def printConfig(String scanType, boolean syncScan, boolean generatePDF) {
+    def printConfig(boolean fullScan, boolean syncScan, boolean generatePDF) {
 
+        def scanType = fullScan ? 'full' : 'incremental'
+        
         def message = """
             Running $scanType scan..."
             \tSynchronous: $syncScan
@@ -122,8 +124,16 @@ class CxScan implements Serializable {
     }
 
     def doFullScan(boolean syncScan, boolean generatePDF) {
+        doScan(true, syncScan, generatePDF)
+    }
+    
+    def doIncrementScan(boolean syncScan, boolean generatePDF) {
+        doScan(false, syncScan, generatePDF)
+    }
+
+    def doScan(boolean fullScan, boolean syncScan, boolean generatePDF) {
         init()
-        printConfig('full', syncScan, generatePDF)
+        printConfig(fullScan, syncScan, generatePDF)
         def comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
         
         //TODO: preset id lookup
@@ -132,6 +142,7 @@ class CxScan implements Serializable {
             avoidDuplicateProjectScans: true, 
             comment: comment,
             teamPath: teamPath, 
+            incremental: !fullScan,
             exclusionsSetting: 'job', 
             excludeFolders: excludeFolders, 
             filterPattern: filterPattern,
