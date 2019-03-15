@@ -16,7 +16,7 @@ class CxScan implements Serializable {
 
 	private static final String ORG = 'CxServer'
 	private static final String SP = 'Ford'
-	private static final String PATH_SEP = '+'
+	private static final String PATH_SEP = '\\\\'
 	
 	//final LineOfBusiness lob
 	//final ProjectType projectType
@@ -46,9 +46,11 @@ class CxScan implements Serializable {
 		this.componentName = componentName;
 		this.branch = branch;
 		this.environment = environment;
-
-		//this.teamPath = buildTeamPath()
-		//this.projectName = buildProjectName()
+	}
+	
+	private void init() {
+		this.teamPath = buildTeamPath()
+		this.projectName = buildProjectName()
 	}
 
 	private String buildTeamPath() {
@@ -68,6 +70,7 @@ class CxScan implements Serializable {
 	}
 	
 	def doFullScan(script, String excludeFolders, String excludePatterns) {
+		init()
 		script.echo 'Running full scan...'
 		printConfig(script)
 	}
