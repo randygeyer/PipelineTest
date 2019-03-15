@@ -36,7 +36,7 @@ class CxScan implements Serializable {
     private String projectName
 
     public CxScan(String lob, String projectType, String applicationTeam, String applicationID,
-    String applicationName, String componentName, String branch, String environment) {
+            String applicationName, String componentName, String branch, String environment) {
 
         this.lob = lob;
         this.projectType = projectType;
@@ -71,22 +71,22 @@ class CxScan implements Serializable {
 
     def doFullScan(script, String excludeFolders, String excludePatterns) {
         init()
-        script.echo 'Running full scan...'
-        printConfig(script)
+        printConfig(script, 'full')
     }
 
-    def printConfig(script) {
-        script.echo '\t' + 'LineOfBusiness: ' + lob
-        + '\n\t' + 'ProjectType: ' + projectType
-        + '\n\t' + 'ApplicationID: ' + applicationID
-        + '\n\t' + 'ApplicationName: ' + applicationName
-        + '\n\t' + 'ApplicationTeam: ' + applicationTeam
-        + '\n\t' + 'ComponentName: ' + componentName
-        + '\n\t' + 'branch: ' + branch
-        + '\n\t' + 'Environment: ' + environment
-        + '\n\t' + 'TeamPath: ' + teamPath
-        + '\n\t' + 'ProjectName: ' + projectName
-        + '\n\t' + 'ExclusionFolders: ' + exclusionFolders
-        + '\n\t' + 'ExclusionPatterns: ' + exclusionPatterns
+    def printConfig(script, scanType) {
+        script.echo "Running ${scanType} scan..."
+            + '\n\t' + 'LineOfBusiness: ' + lob
+            + '\n\t' + 'ProjectType: ' + projectType
+            + '\n\t' + 'ApplicationID: ' + applicationID
+            + '\n\t' + 'ApplicationName: ' + applicationName
+            + '\n\t' + 'ApplicationTeam: ' + applicationTeam
+            + '\n\t' + 'ComponentName: ' + componentName
+            + '\n\t' + 'branch: ' + branch
+            + '\n\t' + 'Environment: ' + environment
+            + '\n\t' + 'TeamPath: ' + teamPath
+            + '\n\t' + 'ProjectName: ' + projectName
+            + '\n\t' + 'ExclusionFolders: ' + exclusionFolders
+            + '\n\t' + 'ExclusionPatterns: ' + exclusionPatterns
     }
 }
