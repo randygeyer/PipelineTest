@@ -1,7 +1,5 @@
 package com.ford.sast.jenkins
 
-import groovy.transform.ToString
-
 /**
  * Provides standardized methods for scanning source code in the Jenkins workspace 
  * with Checkmarx CxSAST and CxOSA scanners.
@@ -14,7 +12,6 @@ import groovy.transform.ToString
  * @author nnarasi3@ford.com
  *
  */
-@ToString(includeNames=true, includeFields=true)
 class CxScan implements Serializable {
 
 	private static final String ORG = 'CxServer'
@@ -69,6 +66,21 @@ class CxScan implements Serializable {
 	
 	def doFullScan(dsl, String excludeFolders, String excludePatterns) {
 		dsl.echo 'Running full scan...'
-		dsl.echo this.toString()
+		printConfig(dsl)
 	}
+
+	def printConfig(dsl) {
+		dsl.echo '\t' + 'LineOfBusiness: ' + lob
+		dsl.echo '\t' + 'ProjectType: ' + projectType
+		dsl.echo '\t' + 'ApplicationID: ' + applicationID
+		dsl.echo '\t' + 'ApplicationName: ' + applicationName
+		dsl.echo '\t' + 'ApplicationTeam: ' + applicationTeam
+		dsl.echo '\t' + 'ComponentName: ' + componentName
+		dsl.echo '\t' + 'branch: ' + branch
+		dsl.echo '\t' + 'Environment: ' + environment
+		dsl.echo '\t' + 'TeamPath: ' + teamPath
+		dsl.echo '\t' + 'ProjectName: ' + projectName
+		dsl.echo '\t' + 'ExclusionFolders: ' + exclusionFolders
+		dsl.echo '\t' + 'ExclusionPatterns: ' + exclusionPatterns
+	}	
 }
