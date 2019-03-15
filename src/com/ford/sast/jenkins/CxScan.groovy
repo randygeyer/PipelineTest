@@ -32,14 +32,14 @@ class CxScan implements Serializable {
 	private final String teamPath
 	private final String projectName
 
-	public CxScan(LineOfBusiness lob, ProjectType projectType, String applicationTeam, String applicationID,  
+	public CxScan(String lob, String projectType, String applicationTeam, String applicationID,  
 			String applicationName, String componentName, String branch, String environment) {
 
 		this.lob = lob;
 		this.projectType = projectType;
+		this.applicationTeam = applicationTeam;
 		this.applicationID = applicationID;
 		this.applicationName = applicationName;
-		this.applicationTeam = applicationTeam;
 		this.componentName = componentName;
 		this.branch = branch;
 		this.environment = environment;
@@ -49,7 +49,7 @@ class CxScan implements Serializable {
 	}
 
 	private String buildTeamPath() {
-		return "\\${ORG}\\${SP}\\${lob}\\${applicationTeam}"
+		return "${ORG}\\${SP}\\${lob}\\${applicationTeam}"
 	}
 	
 	private String buildProjectName() {
