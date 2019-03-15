@@ -126,6 +126,17 @@ class CxScan implements Serializable {
         doScan(false, syncScan, generatePDF)
     }
     
+    /**
+     * Perform an incremental synchronous scan, no PDF report 
+     */
+    def doIncrementScan() {
+        doIncrementScan(true, false)
+    }
+
+    def doIncrementScan(boolean syncScan) {
+        doIncrementScan(syncScan, false)
+    }
+
     def doIncrementScan(boolean syncScan, boolean generatePDF) {
         doScan(true, syncScan, generatePDF)
     }
