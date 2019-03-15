@@ -99,7 +99,7 @@ class CxScan implements Serializable {
             teamPath: "${teamPath}", 
             exclusionsSetting: 'job', excludeFolders: "${excludeFolders}", filterPattern: "${filterPattern}",
             preset: '36', projectName: "${projectName}", sourceEncoding: '1',
-            waitForResultsEnabled: "${syncScan}"])
+            waitForResultsEnabled: syncScan])
 
     }
     
