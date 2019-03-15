@@ -80,13 +80,10 @@ class CxScan implements Serializable {
         filterPattern ?: this.filterPattern + ',' + filterPattern
     }
 
-    def printConfig(boolean fullScan, boolean syncScan, boolean generatePDF) {
+    def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
 
-        def scanType = fullScan ? 'full' : 'incremental'
-        
         def message = """
             Running $scanType scan..."
-            \tSynchronous: $syncScan
             \tLineOfBusiness: $lob
             \tProjectType: $projectType
             \tApplicationID: $applicationID
@@ -97,6 +94,8 @@ class CxScan implements Serializable {
             \tEnvironment: $environment
             \tTeamPath: $teamPath
             \tProjectName: $projectName
+            \tIncremental: $incremental
+            \tSynchronous: $syncScan
             \tGeneratePDF: $generatePDF
             \tExcludeFolders: $excludeFolders
             \tFilterPattern: $filterPattern
@@ -124,16 +123,16 @@ class CxScan implements Serializable {
     }
 
     def doFullScan(boolean syncScan, boolean generatePDF) {
-        doScan(true, syncScan, generatePDF)
+        doScan(false, syncScan, generatePDF)
     }
     
     def doIncrementScan(boolean syncScan, boolean generatePDF) {
-        doScan(false, syncScan, generatePDF)
+        doScan(true, syncScan, generatePDF)
     }
 
-    def doScan(boolean fullScan, boolean syncScan, boolean generatePDF) {
+    def doScan(boolean incremental, boolean syncScan, boolean generatePDF) {
         init()
-        printConfig(fullScan, syncScan, generatePDF)
+        printConfig(incremental, syncScan, generatePDF)
         def comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
         
         //TODO: preset id lookup
@@ -142,7 +141,7 @@ class CxScan implements Serializable {
             avoidDuplicateProjectScans: true, 
             comment: comment,
             teamPath: teamPath, 
-            incremental: !fullScan,
+            incremental: incremental,
             exclusionsSetting: 'job', 
             excludeFolders: excludeFolders, 
             filterPattern: filterPattern,
