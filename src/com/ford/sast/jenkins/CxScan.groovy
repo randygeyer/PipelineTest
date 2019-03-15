@@ -14,79 +14,79 @@ package com.ford.sast.jenkins
  */
 class CxScan implements Serializable {
 
-	private static final String ORG = 'CxServer'
-	private static final String SP = 'Ford'
-	private static final String PATH_SEP = '\\\\'
-	
-	//final LineOfBusiness lob
-	//final ProjectType projectType
-	final String lob
-	final String projectType
-	final String applicationID
-	final String applicationName
-	final String applicationTeam
-	final String componentName
-	final String branch
-	final String environment
-	
-	final String exclusionFolders = ''
-	final String exclusionPatterns = ''
-	
-	private String teamPath
-	private String projectName
+    private static final String ORG = 'CxServer'
+    private static final String SP = 'Ford'
+    private static final String PATH_SEP = '\\\\'
 
-	public CxScan(String lob, String projectType, String applicationTeam, String applicationID,  
-			String applicationName, String componentName, String branch, String environment) {
+    //final LineOfBusiness lob
+    //final ProjectType projectType
+    final String lob
+    final String projectType
+    final String applicationID
+    final String applicationName
+    final String applicationTeam
+    final String componentName
+    final String branch
+    final String environment
 
-		this.lob = lob;
-		this.projectType = projectType;
-		this.applicationTeam = applicationTeam;
-		this.applicationID = applicationID;
-		this.applicationName = applicationName;
-		this.componentName = componentName;
-		this.branch = branch;
-		this.environment = environment;
-	}
-	
-	private void init() {
-		this.teamPath = buildTeamPath()
-		this.projectName = buildProjectName()
-	}
+    final String exclusionFolders = ''
+    final String exclusionPatterns = ''
 
-	private String buildTeamPath() {
-		return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
-	}
-	
-	private String buildProjectName() {
-		return "${applicationName}-${componentName}-${branch}"
-	}
-	
-	def doFullScan(script) {
-		doFullScan(script, '', '')
-	} 
+    private String teamPath
+    private String projectName
 
-	def doFullScan(script, String excludeFolders) {
-		doFullScan(script, excludeFolders, '')
-	}
-	
-	def doFullScan(script, String excludeFolders, String excludePatterns) {
-		init()
-		script.echo 'Running full scan...'
-		printConfig(script)
-	}
+    public CxScan(String lob, String projectType, String applicationTeam, String applicationID,
+    String applicationName, String componentName, String branch, String environment) {
 
-	def printConfig(script) {
-		script.echo '\t' + 'LineOfBusiness: ' + lob
-		script.echo '\t' + 'ProjectType: ' + projectType
-		script.echo '\t' + 'ApplicationID: ' + applicationID
-		script.echo '\t' + 'ApplicationName: ' + applicationName
-		script.echo '\t' + 'ApplicationTeam: ' + applicationTeam
-		script.echo '\t' + 'ComponentName: ' + componentName
-		script.echo '\t' + 'branch: ' + branch
-		script.echo '\t' + 'Environment: ' + environment
-		script.echo '\t' + 'TeamPath: ' + teamPath
-		script.echo '\t' + 'ProjectName: ' + projectName
-		script.echo '\t' + 'ExclusionFolders: ' + exclusionFolders
-		script.echo '\t' + 'ExclusionPatterns: ' + exclusionPatterns
-	}	
+        this.lob = lob;
+        this.projectType = projectType;
+        this.applicationTeam = applicationTeam;
+        this.applicationID = applicationID;
+        this.applicationName = applicationName;
+        this.componentName = componentName;
+        this.branch = branch;
+        this.environment = environment;
+    }
+
+    private void init() {
+        this.teamPath = buildTeamPath()
+        this.projectName = buildProjectName()
+    }
+
+    private String buildTeamPath() {
+        return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
+    }
+
+    private String buildProjectName() {
+        return "${applicationName}-${componentName}-${branch}"
+    }
+
+    def doFullScan(script) {
+        doFullScan(script, '', '')
+    }
+
+    def doFullScan(script, String excludeFolders) {
+        doFullScan(script, excludeFolders, '')
+    }
+
+    def doFullScan(script, String excludeFolders, String excludePatterns) {
+        init()
+        script.echo 'Running full scan...'
+        printConfig(script)
+    }
+
+    def printConfig(script) {
+        script.echo '\t' + 'LineOfBusiness: ' + lob
+        + '\n\t' + 'ProjectType: ' + projectType
+        + '\n\t' + 'ApplicationID: ' + applicationID
+        + '\n\t' + 'ApplicationName: ' + applicationName
+        + '\n\t' + 'ApplicationTeam: ' + applicationTeam
+        + '\n\t' + 'ComponentName: ' + componentName
+        + '\n\t' + 'branch: ' + branch
+        + '\n\t' + 'Environment: ' + environment
+        + '\n\t' + 'TeamPath: ' + teamPath
+        + '\n\t' + 'ProjectName: ' + projectName
+        + '\n\t' + 'ExclusionFolders: ' + exclusionFolders
+        + '\n\t' + 'ExclusionPatterns: ' + exclusionPatterns
+    }
 }
