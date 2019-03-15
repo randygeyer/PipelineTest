@@ -35,8 +35,8 @@ class CxScan implements Serializable {
 	private final String teamPath
 	private final String projectName
 
-	public CxScan(LineOfBusiness lob, ProjectType projectType, String applicationID, String applicationName,
-			String applicationTeam, String componentName, String branch, String environment) {
+	public CxScan(LineOfBusiness lob, ProjectType projectType, String applicationTeam, String applicationID,  
+			String applicationName, String componentName, String branch, String environment) {
 
 		this.lob = lob;
 		this.projectType = projectType;
