@@ -30,7 +30,7 @@ class CxScan implements Serializable {
     final String branch
     final String environment
 
-    final String exclusionFolders = 'node_modules,test,target'
+    final String excludeFolders = 'node_modules,test,target'
     final String filterPattern = '''
             !**/_cvs/**/*, !**/.svn/**/*,   !**/.hg/**/*,   !**/.git/**/*,  !**/.bzr/**/*, !**/bin/**/*,
             !**/obj/**/*,  !**/backup/**/*, !**/.idea/**/*, !**/*.DS_Store, !**/*.ipr,     !**/*.iws,
@@ -75,40 +75,12 @@ class CxScan implements Serializable {
         return "${applicationName}-${componentName}-${branch}"
     }
 
-    def doFullScan(steps) {
-        doFullScan(steps, true, '', '')
-    }
-
-    def doFullScan(steps, boolean syncScan) {
-        doFullScan(steps, syncScan, '', '')
-    }
-
-    def doFullScan(steps, boolean syncScan, String excludeFolders) {
-        doFullScan(steps, syncScan, excludeFolders, '')
-    }
-
-    def doFullScan(steps, boolean syncScan, String excludeFolders, String filterPattern) {
-        init()
-        addExclusions(excludeFolders, filterPattern)
-        printConfig('full', syncScan)
-        def comment = "AppID: ${applicationID}; Jenkins build: ${script.env.BUILD_NUMBER}"
-        
-        //TODO: preset id lookup
-        script.steps.step([$class: 'CxScanBuilder',
-            useOwnServerCredentials: false, avoidDuplicateProjectScans: true, comment: "${comment}",
-            teamPath: "${teamPath}", 
-            exclusionsSetting: 'job', excludeFolders: "${excludeFolders}", filterPattern: "${filterPattern}",
-            preset: '36', projectName: "${projectName}", sourceEncoding: '1',
-            waitForResultsEnabled: syncScan])
-
-    }
-    
-    def addExclusions(String excludeFolders, String filterPattern) {
-        excludeFolders ?: this.exclusionFolders + ',' + excludeFolders
+    private void addExclusions(String excludeFolders, String filterPattern) {
+        excludeFolders ?: this.excludeFolders + ',' + excludeFolders
         filterPattern ?: this.filterPattern + ',' + filterPattern
     }
 
-    def printConfig(String scanType, boolean syncScan) {
+    def printConfig(String scanType, boolean syncScan, boolean generatePDF) {
 
         def message = """
             Running $scanType scan..."
@@ -123,9 +95,52 @@ class CxScan implements Serializable {
             \tEnvironment: $environment
             \tTeamPath: $teamPath
             \tProjectName: $projectName
-            \tExclusionFolders: $exclusionFolders
+            \tExcludeFolders: excludeFolders
             \tFilterPattern: $filterPattern
+            \tGeneratePDF: $generatePDF
             """
         script.echo message
     }
+    
+    def addFolderExclusions(String excludeFolders) {
+        addExclusions(excludeFolders, '')
+    }
+
+    def addFilterPattern(String filterPattern) {
+        addExclusions('', filterPattern)
+    }
+
+    /**
+     * Perform a full synchronous scan, no PDF report 
+     */
+    def doFullScan() {
+        doFullScan(true, false)
+    }
+
+    def doFullScan(boolean syncScan) {
+        doFullScan(syncScan, false)
+    }
+
+    def doFullScan(boolean syncScan, boolean generatePDF) {
+        init()
+        printConfig('full', syncScan, generatePDF)
+        def comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
+        
+        //TODO: preset id lookup
+        script.steps.step([$class: 'CxScanBuilder',
+            useOwnServerCredentials: false, 
+            avoidDuplicateProjectScans: true, 
+            comment: "${comment}",
+            teamPath: "${teamPath}", 
+            exclusionsSetting: 'job', 
+            excludeFolders: "\'${excludeFolders}\'", 
+            filterPattern: "\'${filterPattern}\'",
+            preset: '36', 
+            projectName: "${projectName}", 
+            sourceEncoding: '1',
+            generatePdfReport: generatePDF,
+            failBuildOnNewResults: false, failBuildOnNewSeverity: 'HIGH',
+            waitForResultsEnabled: syncScan])
+    }
+    
 }
