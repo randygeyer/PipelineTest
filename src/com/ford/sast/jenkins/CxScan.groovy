@@ -47,8 +47,8 @@ class CxScan implements Serializable {
 		this.branch = branch;
 		this.environment = environment;
 
-		this.teamPath = buildTeamPath()
-		this.projectName = buildProjectName()
+		//this.teamPath = buildTeamPath()
+		//this.projectName = buildProjectName()
 	}
 
 	private String buildTeamPath() {
