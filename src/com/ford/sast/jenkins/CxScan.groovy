@@ -96,7 +96,7 @@ class CxScan implements Serializable {
             \tTeamPath: $teamPath
             \tProjectName: $projectName
             \tGeneratePDF: $generatePDF
-            \tExcludeFolders: excludeFolders
+            \tExcludeFolders: $excludeFolders
             \tFilterPattern: $filterPattern
             """
         script.echo message
@@ -130,13 +130,13 @@ class CxScan implements Serializable {
         script.steps.step([$class: 'CxScanBuilder',
             useOwnServerCredentials: false, 
             avoidDuplicateProjectScans: true, 
-            comment: "${comment}",
-            teamPath: "${teamPath}", 
+            comment: comment,
+            teamPath: teamPath, 
             exclusionsSetting: 'job', 
             excludeFolders: excludeFolders, 
             filterPattern: filterPattern,
             preset: '36', 
-            projectName: "${projectName}", 
+            projectName: projectName, 
             sourceEncoding: '1',
             generatePdfReport: generatePDF,
             failBuildOnNewResults: false, failBuildOnNewSeverity: 'HIGH',
