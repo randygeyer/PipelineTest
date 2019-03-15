@@ -2,7 +2,7 @@ package com.ford.sast.jenkins
 
 class LineOfBusiness {
 
-    private enum LoB {
+    enum LoB {
         // TODO: replace names with proper full names
         AV ('AV'),
         CV('CV'),

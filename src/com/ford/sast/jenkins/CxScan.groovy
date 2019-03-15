@@ -22,7 +22,7 @@ class CxScan implements Serializable {
     //final ProjectType projectType
     final def script
     final String lob
-    private LineOfBusiness group
+    private LineOfBusiness.LoB group
     final String projectType
     final String applicationID
     final String applicationName
