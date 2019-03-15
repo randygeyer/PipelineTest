@@ -91,7 +91,7 @@ class CxScan implements Serializable {
         init()
         addExclusions(excludeFolders, filterPattern)
         printConfig('full', syncScan)
-        def comment = "AppID: ${ApplicationID}; Jenkins build: ${script.env.BUILD_NUMBER}"
+        def comment = "AppID: ${applicationID}; Jenkins build: ${script.env.BUILD_NUMBER}"
         
         //TODO: preset id lookup
         script.steps.step([$class: 'CxScanBuilder',
