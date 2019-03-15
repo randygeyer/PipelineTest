@@ -51,7 +51,7 @@ class CxScan implements Serializable {
 	}
 
 	private String buildTeamPath() {
-		return "${ORG}\\${SP}\\${lob}\\${applicationTeam}"
+		return "${ORG}\\\\${SP}\\\\${lob}\\\\${applicationTeam}"
 	}
 	
 	private String buildProjectName() {
