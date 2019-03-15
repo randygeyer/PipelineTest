@@ -95,9 +95,9 @@ class CxScan implements Serializable {
             \tEnvironment: $environment
             \tTeamPath: $teamPath
             \tProjectName: $projectName
+            \tGeneratePDF: $generatePDF
             \tExcludeFolders: excludeFolders
             \tFilterPattern: $filterPattern
-            \tGeneratePDF: $generatePDF
             """
         script.echo message
     }
@@ -133,8 +133,8 @@ class CxScan implements Serializable {
             comment: "${comment}",
             teamPath: "${teamPath}", 
             exclusionsSetting: 'job', 
-            excludeFolders: "\'${excludeFolders}\'", 
-            filterPattern: "\'${filterPattern}\'",
+            excludeFolders: excludeFolders, 
+            filterPattern: filterPattern,
             preset: '36', 
             projectName: "${projectName}", 
             sourceEncoding: '1',
