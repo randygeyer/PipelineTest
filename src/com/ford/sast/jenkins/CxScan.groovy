@@ -124,7 +124,7 @@ class CxScan implements Serializable {
             \tTeamPath: $teamPath
             \tProjectName: $projectName
             \tExclusionFolders: $exclusionFolders
-            \tExclusionPatterns: $exclusionPatterns
+            \tFilterPattern: $filterPattern
             """
         script.echo message
     }
