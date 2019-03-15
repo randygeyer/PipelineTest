@@ -1,7 +1,5 @@
 package com.ford.sast.jenkins
 
-import com.ford.sast.jenkins.LineOfBusiness.LoB
-
 /**
  * Provides standardized methods for scanning source code in the Jenkins workspace 
  * with Checkmarx CxSAST and CxOSA scanners.
@@ -24,7 +22,7 @@ class CxScan implements Serializable {
     //final ProjectType projectType
     final def script
     final String lob
-    private LineOfBusiness.LoB group
+    //private LineOfBusiness.LoB group
     final String projectType
     final String applicationID
     final String applicationName
@@ -66,7 +64,7 @@ class CxScan implements Serializable {
     }
 
     private void init() {
-        this.group = LineOfBusiness.parse(this.lob)
+        //this.group = LineOfBusiness.parse(this.lob)
         this.teamPath = buildTeamPath()
         this.projectName = buildProjectName()
     }
@@ -88,7 +86,7 @@ class CxScan implements Serializable {
 
         def message = """
             Running scan...
-            \tLineOfBusiness: $group
+            \tLineOfBusiness: $lob
             \tProjectType: $projectType
             \tApplicationID: $applicationID
             \tApplicationName: $applicationName
