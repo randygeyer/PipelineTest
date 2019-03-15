@@ -83,7 +83,7 @@ class CxScan implements Serializable {
     def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
 
         def message = """
-            Running $scanType scan..."
+            Running scan...
             \tLineOfBusiness: $lob
             \tProjectType: $projectType
             \tApplicationID: $applicationID
