@@ -70,7 +70,7 @@ class CxScan implements Serializable {
     }
 
     private String buildTeamPath() {
-        return ORG + PATH_SEP + SP + PATH_SEP + group.toString() + PATH_SEP + applicationTeam
+        return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
     }
 
     private String buildProjectName() {
