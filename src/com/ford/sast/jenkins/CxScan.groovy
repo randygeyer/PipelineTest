@@ -32,8 +32,8 @@ class CxScan implements Serializable {
 	final String exclusionFolders = ''
 	final String exclusionPatterns = ''
 	
-	private final String teamPath
-	private final String projectName
+	private String teamPath
+	private String projectName
 
 	public CxScan(String lob, String projectType, String applicationTeam, String applicationID,  
 			String applicationName, String componentName, String branch, String environment) {
