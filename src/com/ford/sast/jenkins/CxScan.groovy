@@ -75,6 +75,24 @@ class CxScan implements Serializable {
     }
 
     def printConfig(script, scanType) {
+        def message = """
+Running $scanType scan..."
+\tLineOfBusiness: $lob
+\tProjectType: $projectType
+\tApplicationID: $applicationID
+\tApplicationName: $applicationName
+\tApplicationTeam: $applicationTeam
+\tComponentName: $componentName
+\tBranch: $branch
+\tEnvironment: $environment
+\tTeamPath: $teamPath
+\tProjectName: $projectName
+\tExclusionFolders: $exclusionFolders
+\tExclusionPatterns: $exclusionPatterns
+"""
+        script.echo message
+        
+        /*
         script.echo "Running ${scanType} scan..."
             + '\n\t' + 'LineOfBusiness: ' + lob
             + '\n\t' + 'ProjectType: ' + projectType
@@ -88,5 +106,6 @@ class CxScan implements Serializable {
             + '\n\t' + 'ProjectName: ' + projectName
             + '\n\t' + 'ExclusionFolders: ' + exclusionFolders
             + '\n\t' + 'ExclusionPatterns: ' + exclusionPatterns
+            */
     }
 }
