@@ -16,6 +16,7 @@ class CxScan implements Serializable {
 
 	private static final String ORG = 'CxServer'
 	private static final String SP = 'Ford'
+	private static final String PATH_SEP = '\\\\'
 	
 	//final LineOfBusiness lob
 	//final ProjectType projectType
@@ -51,7 +52,7 @@ class CxScan implements Serializable {
 	}
 
 	private String buildTeamPath() {
-		return "${ORG}\\\\${SP}\\\\${lob}\\\\${applicationTeam}"
+		return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
 	}
 	
 	private String buildProjectName() {
