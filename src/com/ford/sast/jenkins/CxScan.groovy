@@ -31,8 +31,8 @@ class CxScan implements Serializable {
     final String branch
     final String environment
 
-    final String excludeFolders = 'node_modules,test,target'
-    final String filterPattern = '''
+    private String excludeFolders = 'node_modules,test,target'
+    private String filterPattern = '''
             !**/_cvs/**/*, !**/.svn/**/*,   !**/.hg/**/*,   !**/.git/**/*,  !**/.bzr/**/*, !**/bin/**/*,
             !**/obj/**/*,  !**/backup/**/*, !**/.idea/**/*, !**/*.DS_Store, !**/*.ipr,     !**/*.iws,
             !**/*.bak,     !**/*.tmp,       !**/*.aac,      !**/*.aif,      !**/*.iff,     !**/*.m3u, !**/*.mid, !**/*.mp3,
@@ -46,9 +46,11 @@ class CxScan implements Serializable {
             !**/*.stml,    !**/*.ttml,      !**/*.txn,      !**/*.xhtm,     !**/*.xhtml,   !**/*.class, !**/*.iml, !Checkmarx/Reports/*.*
             '''
 
-    private String teamPath
-    private String projectName
-
+    final String teamPath
+    final String projectName
+    
+    private String comment
+    
     public CxScan(script, String lob, String projectType, String applicationTeam, String applicationID,
             String applicationName, String componentName, String branch, String environment) {
 
@@ -61,12 +63,15 @@ class CxScan implements Serializable {
         this.componentName = componentName
         this.branch = branch
         this.environment = environment
+        this.teamPath = ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
+        this.projectName = "${applicationName}-${componentName}-${branch}"
+        this.comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
     }
 
     private void init() {
         //this.group = LineOfBusiness.parse(this.lob)
-        this.teamPath = buildTeamPath()
-        this.projectName = buildProjectName()
+        //this.teamPath = buildTeamPath()
+        //this.projectName = buildProjectName()
     }
 
     private String buildTeamPath() {
@@ -75,11 +80,6 @@ class CxScan implements Serializable {
 
     private String buildProjectName() {
         return "${applicationName}-${componentName}-${branch}"
-    }
-
-    private void addExclusions(String excludeFolders, String filterPattern) {
-        excludeFolders ?: this.excludeFolders + ',' + excludeFolders
-        filterPattern ?: this.filterPattern + ',' + filterPattern
     }
 
     def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
@@ -99,18 +99,28 @@ class CxScan implements Serializable {
             \tIncremental: $incremental
             \tSynchronous: $syncScan
             \tGeneratePDF: $generatePDF
+            \tComment: $comment
             \tExcludeFolders: $excludeFolders
             \tFilterPattern: $filterPattern
             """
         script.echo message
     }
     
+    private void addExclusions(String excludeFolders, String filterPattern) {
+        excludeFolders ?: this.excludeFolders + ',' + excludeFolders
+        filterPattern ?: this.filterPattern + ',' + filterPattern
+    }
+
     def addFolderExclusions(String excludeFolders) {
         addExclusions(excludeFolders, '')
     }
 
     def addFilterPattern(String filterPattern) {
         addExclusions('', filterPattern)
+    }
+    
+    def addScanComment(String comment) {
+        comment ?: this.comment + '; ' + comment
     }
 
     /**
@@ -144,10 +154,9 @@ class CxScan implements Serializable {
     }
 
     def doScan(boolean incremental, boolean syncScan, boolean generatePDF) {
-        init()
+        //init()
         printConfig(incremental, syncScan, generatePDF)
-        def comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
-        
+
         //TODO: preset id lookup
         script.steps.step([$class: 'CxScanBuilder',
             useOwnServerCredentials: false, 
@@ -158,7 +167,7 @@ class CxScan implements Serializable {
             exclusionsSetting: 'job', 
             excludeFolders: excludeFolders, 
             filterPattern: filterPattern,
-            preset: '36', 
+            preset: '36', // TODO: preset id lookup
             projectName: projectName, 
             sourceEncoding: '1',
             generatePdfReport: generatePDF,
