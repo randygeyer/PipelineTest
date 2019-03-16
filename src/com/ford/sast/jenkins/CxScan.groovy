@@ -68,20 +68,6 @@ class CxScan implements Serializable {
         this.comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
     }
 
-    private void init() {
-        //this.group = LineOfBusiness.parse(this.lob)
-        //this.teamPath = buildTeamPath()
-        //this.projectName = buildProjectName()
-    }
-
-    private String buildTeamPath() {
-        return ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
-    }
-
-    private String buildProjectName() {
-        return "${applicationName}-${componentName}-${branch}"
-    }
-
     def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
 
         def message = """
