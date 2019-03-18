@@ -2,9 +2,9 @@ package com.ford.sast.jenkins
 
 enum ProjectType {
     
-    WebApp('WebApp', 100001),
-    WebService('WebService', 100002),
-    Mobile('Mobile', 100003)
+    WebApp('WebApp', 100004),
+    WebService('WebService', 100005),
+    Mobile('Mobile', 100006)
 
     private static final String PREFIX = 'Ford - '
 
