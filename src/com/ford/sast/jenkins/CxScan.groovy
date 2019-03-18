@@ -88,59 +88,9 @@ class CxScan implements Serializable {
         this.comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
     }
 
-    def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
-
-        def message = """\
-            Running scan...
-            \tLineOfBusiness: $lob
-            \tProjectType: $projectType
-            \tApplicationID: $applicationID
-            \tApplicationName: $applicationName
-            \tApplicationTeam: $applicationTeam
-            \tComponentName: $componentName
-            \tBranch: $branch
-            \tEnvironment: $environment
-            \tTeamPath: $teamPath
-            \tProjectName: $projectName
-            \tIncremental: $incremental
-            \tSynchronous: $syncScan
-            \tGeneratePDF: $generatePDF
-            \tComment: ${ this.comment }
-            \tFailBuildOnNewResults: ${ this.failBuildOnNewResults }
-            \tFailBuildOnNewSeverity: ${ this.failBuildOnNewSeverity }
-            \tVulnerabilityThresholdEnabled: ${ this.vulnerabilityThresholdEnabled }
-            \tVulnerabilityThresholdResult: ${ this.vulnerabilityThresholdResult }
-            \tVulnerabilityHighThreshold: ${ this.vulnerabilityHighThreshold }
-            \tExcludeFolders: ${ this.excludeFolders }
-            \tFilterPattern: ${ this.filterPattern }
-            """
-        script.echo message
-    }
-    
-    def printOsaConfig(String includeFolders, String excludeFolders) {
-
-        def message = """
-            Running OSA scan...
-            \tLineOfBusiness: $lob
-            \tProjectType: $projectType
-            \tApplicationID: $applicationID
-            \tApplicationName: $applicationName
-            \tApplicationTeam: $applicationTeam
-            \tComponentName: $componentName
-            \tBranch: $branch
-            \tEnvironment: $environment
-            \tTeamPath: $teamPath
-            \tProjectName: $projectName
-            \tIncludeFolders: $includeFolders
-            \tExcludeFolders: $excludeFolders
-            \tOsaArchiveIncludePatterns: $osaArchiveIncludePatterns
-            """
-        script.echo message
-    }
-    
     private void addExclusions(String excludeFolders, String filterPattern) {
-        excludeFolders ?: this.excludeFolders + ',' + excludeFolders
-        filterPattern ?: this.filterPattern + ',' + filterPattern
+        this.excludeFolders += excludeFolders ? ',' + excludeFolders : ''
+        this.filterPattern += filterPattern ? ',' + filterPattern : ''
     }
 
     void addFolderExclusions(String excludeFolders) {
@@ -152,7 +102,7 @@ class CxScan implements Serializable {
     }
     
     void addScanComment(String comment) {
-        comment ?: this.comment + '; ' + comment
+        this.comment += comment ? '; ' + comment : '' 
     }
     
     /**
@@ -270,6 +220,56 @@ class CxScan implements Serializable {
             osaEnabled: true, 
             osaInstallBeforeScan: false])
            */
+    }
+    
+    def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
+
+        def message = """\
+            Running scan...
+            \tLineOfBusiness: $lob
+            \tProjectType: $projectType
+            \tApplicationID: $applicationID
+            \tApplicationName: $applicationName
+            \tApplicationTeam: $applicationTeam
+            \tComponentName: $componentName
+            \tBranch: $branch
+            \tEnvironment: $environment
+            \tTeamPath: $teamPath
+            \tProjectName: $projectName
+            \tIncremental: $incremental
+            \tSynchronous: $syncScan
+            \tGeneratePDF: $generatePDF
+            \tComment: ${ this.comment }
+            \tFailBuildOnNewResults: ${ this.failBuildOnNewResults }
+            \tFailBuildOnNewSeverity: ${ this.failBuildOnNewSeverity }
+            \tVulnerabilityThresholdEnabled: ${ this.vulnerabilityThresholdEnabled }
+            \tVulnerabilityThresholdResult: ${ this.vulnerabilityThresholdResult }
+            \tVulnerabilityHighThreshold: ${ this.vulnerabilityHighThreshold }
+            \tExcludeFolders: ${ this.excludeFolders }
+            \tFilterPattern: ${ this.filterPattern }
+            """
+        script.echo message
+    }
+    
+    def printOsaConfig(String includeFolders, String excludeFolders) {
+
+        def message = """
+            Running OSA scan...
+            \tLineOfBusiness: $lob
+            \tProjectType: $projectType
+            \tApplicationID: $applicationID
+            \tApplicationName: $applicationName
+            \tApplicationTeam: $applicationTeam
+            \tComponentName: $componentName
+            \tBranch: $branch
+            \tEnvironment: $environment
+            \tTeamPath: $teamPath
+            \tProjectName: $projectName
+            \tIncludeFolders: $includeFolders
+            \tExcludeFolders: $excludeFolders
+            \tOsaArchiveIncludePatterns: $osaArchiveIncludePatterns
+            """
+        script.echo message
     }
     
 }
