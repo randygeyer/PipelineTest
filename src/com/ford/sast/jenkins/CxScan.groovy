@@ -18,11 +18,14 @@ class CxScan implements Serializable {
     private static final String SP = 'Ford'
     private static final String PATH_SEP = '\\'
 
+    // RG: enums don't work in Pipelines
     //final LineOfBusiness lob
     //final ProjectType projectType
+    //private LineOfBusiness.LoB group
+
+    // required fields
     final def script
     final String lob
-    //private LineOfBusiness.LoB group
     final String projectType
     final String applicationID
     final String applicationName
@@ -30,7 +33,20 @@ class CxScan implements Serializable {
     final String componentName
     final String branch
     final String environment
+    
+    // Optional properties with defaults
+    String sourceEncoding = '1'                 // default engine configuration
+    boolean avoidDuplicateProjectScans = true
+    boolean failBuildOnNewResults = false
+    String failBuildOnNewSeverity = 'HIGH'
 
+    // optional vulnerability threshold fields, call enableVulnerabilityThreshold method to set
+    private boolean vulnerabilityThresholdEnabled = false
+    private String vulnerabilityThresholdResult = 'UNSTABLE'
+    private int vulnerabilityHighThreshold = 0
+    
+    // Required fields that can be appended to
+    private String comment
     private String excludeFolders = 'node_modules,test,target'
     private String filterPattern = '''
             !**/_cvs/**/*, !**/.svn/**/*,   !**/.hg/**/*,   !**/.git/**/*,  !**/.bzr/**/*, !**/bin/**/*,
@@ -46,11 +62,11 @@ class CxScan implements Serializable {
             !**/*.stml,    !**/*.ttml,      !**/*.txn,      !**/*.xhtm,     !**/*.xhtml,   !**/*.class, !**/*.iml, !Checkmarx/Reports/*.*
             '''
 
+    // Computed fields
     final String teamPath
     final String projectName
     
-    private String comment
-    
+
     public CxScan(script, String lob, String projectType, String applicationTeam, String applicationID,
             String applicationName, String componentName, String branch, String environment) {
 
@@ -88,6 +104,11 @@ class CxScan implements Serializable {
             \tComment: $comment
             \tExcludeFolders: $excludeFolders
             \tFilterPattern: $filterPattern
+            \tFailBuildOnNewResults: $failBuildOnNewResults
+            \tFailBuildOnNewSeverity: $failBuildOnNewSeverity
+            \tVulnerabilityThresholdEnabled: $vulnerabilityThresholdEnabled
+            \tVulnerabilityThresholdResult: $vulnerabilityThresholdResult
+            \tVulnerabilityHighThreshold: $vulnerabilityHighThreshold
             """
         script.echo message
     }
@@ -97,48 +118,75 @@ class CxScan implements Serializable {
         filterPattern ?: this.filterPattern + ',' + filterPattern
     }
 
-    def addFolderExclusions(String excludeFolders) {
+    void addFolderExclusions(String excludeFolders) {
         addExclusions(excludeFolders, '')
     }
 
-    def addFilterPattern(String filterPattern) {
+    void addFilterPattern(String filterPattern) {
         addExclusions('', filterPattern)
     }
     
-    def addScanComment(String comment) {
+    void addScanComment(String comment) {
         comment ?: this.comment + '; ' + comment
+    }
+    
+    /**
+     * Use to enable vulnerability threshold
+     * 
+     * @param failBuild set to true to fail build, otherwise build will be marked UNSTABLE
+     * @param highThreshold set to number of high results to trigger threshold 
+     */
+    void enableVulnerabilityThreshold(boolean failBuild, int highThreshold) {
+        this.vulnerabilityThresholdEnabled = true
+        this.vulnerabilityThresholdResult = failBuild ? 'FAILURE' : 'UNSTABLE'
+        this.vulnerabilityHighThreshold = highThreshold 
     }
 
     /**
-     * Perform a full synchronous scan, no PDF report 
+     * Perform a full synchronous SAST scan; no PDF report 
      */
     def doFullScan() {
         doFullScan(true, false)
     }
 
+    /**
+     * Perform a full SAST scan; specify sync/async, no PDF report 
+     */
     def doFullScan(boolean syncScan) {
         doFullScan(syncScan, false)
     }
 
+    /**
+     * Perform a full SAST scan; specify sync/async, PDF report 
+     */
     def doFullScan(boolean syncScan, boolean generatePDF) {
         doScan(false, syncScan, generatePDF)
     }
     
     /**
-     * Perform an incremental synchronous scan, no PDF report 
+     * Perform an incremental synchronous SAST scan; no PDF report 
      */
     def doIncrementScan() {
         doIncrementScan(true, false)
     }
 
+    /**
+     * Perform an incremental SAST scan; specify sync/async, no PDF report 
+     */
     def doIncrementScan(boolean syncScan) {
         doIncrementScan(syncScan, false)
     }
 
+    /**
+     * Perform an incremental SAST scan; specify sync/async, PDF report 
+     */
     def doIncrementScan(boolean syncScan, boolean generatePDF) {
         doScan(true, syncScan, generatePDF)
     }
 
+    /**
+     * Perform a SAST scan; specify incremental, sync/async, PDF report 
+     */
     def doScan(boolean incremental, boolean syncScan, boolean generatePDF) {
         //init()
         printConfig(incremental, syncScan, generatePDF)
@@ -146,18 +194,22 @@ class CxScan implements Serializable {
         //TODO: preset id lookup
         script.steps.step([$class: 'CxScanBuilder',
             useOwnServerCredentials: false, 
-            avoidDuplicateProjectScans: true, 
-            comment: comment,
-            teamPath: teamPath, 
+            avoidDuplicateProjectScans: this.avoidDuplicateProjectScans, 
+            comment: this.comment,
+            teamPath: this.teamPath, 
             incremental: incremental,
             exclusionsSetting: 'job', 
-            excludeFolders: excludeFolders, 
-            filterPattern: filterPattern,
-            preset: '36', // TODO: preset id lookup
-            projectName: projectName, 
-            sourceEncoding: '1',
+            excludeFolders: this.excludeFolders, 
+            filterPattern: this.filterPattern,
+            preset: ProjectTypes.lookupPreset().toString(), 
+            projectName: this.projectName, 
+            sourceEncoding: this.sourceEncoding,            // engine configuration
             generatePdfReport: generatePDF,
-            failBuildOnNewResults: false, failBuildOnNewSeverity: 'HIGH',
+            failBuildOnNewResults: this.failBuildOnNewResults, 
+            failBuildOnNewSeverity: this.failBuildOnNewSeverity,
+            highThreshold: this.vulnerabilityHighThreshold,
+            vulnerabilityThresholdEnabled: this.vulnerabilityThresholdEnabled,
+            vulnerabilityThresholdResult: this.vulnerabilityThresholdResult,
             waitForResultsEnabled: syncScan])
     }
     
