@@ -90,7 +90,7 @@ class CxScan implements Serializable {
 
     def printConfig(boolean incremental, boolean syncScan, boolean generatePDF) {
 
-        def message = """
+        def message = """\
             Running scan...
             \tLineOfBusiness: $lob
             \tProjectType: $projectType
@@ -105,14 +105,14 @@ class CxScan implements Serializable {
             \tIncremental: $incremental
             \tSynchronous: $syncScan
             \tGeneratePDF: $generatePDF
-            \tComment: ${ -> this.comment }
-            \tFailBuildOnNewResults: ${ -> this.failBuildOnNewResults }
-            \tFailBuildOnNewSeverity: ${ -> this.failBuildOnNewSeverity }
-            \tVulnerabilityThresholdEnabled: ${ -> this.vulnerabilityThresholdEnabled }
-            \tVulnerabilityThresholdResult: ${ -> this.vulnerabilityThresholdResult }
-            \tVulnerabilityHighThreshold: ${ -> this.vulnerabilityHighThreshold }
-            \tExcludeFolders: ${ -> this.excludeFolders }
-            \tFilterPattern: ${ -> this.filterPattern }
+            \tComment: ${ this.comment }
+            \tFailBuildOnNewResults: ${ this.failBuildOnNewResults }
+            \tFailBuildOnNewSeverity: ${ this.failBuildOnNewSeverity }
+            \tVulnerabilityThresholdEnabled: ${ this.vulnerabilityThresholdEnabled }
+            \tVulnerabilityThresholdResult: ${ this.vulnerabilityThresholdResult }
+            \tVulnerabilityHighThreshold: ${ this.vulnerabilityHighThreshold }
+            \tExcludeFolders: ${ this.excludeFolders }
+            \tFilterPattern: ${ this.filterPattern }
             """
         script.echo message
     }
