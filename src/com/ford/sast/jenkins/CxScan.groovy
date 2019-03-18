@@ -108,7 +108,7 @@ class CxScan implements Serializable {
     /**
      * Use to enable vulnerability threshold
      * 
-     * @param failBuild - set to true to fail build, otherwise build will be marked UNSTABLE
+     * @param failBuild - if true, build will FAIL; otherwise build will be UNSTABLE
      * @param highThreshold - set to number of high results to trigger threshold 
      */
     void enableVulnerabilityThreshold(boolean failBuild, int highThreshold) {
