@@ -105,14 +105,14 @@ class CxScan implements Serializable {
             \tIncremental: $incremental
             \tSynchronous: $syncScan
             \tGeneratePDF: $generatePDF
-            \tComment: $comment
-            \tFailBuildOnNewResults: $failBuildOnNewResults
-            \tFailBuildOnNewSeverity: $failBuildOnNewSeverity
-            \tVulnerabilityThresholdEnabled: $vulnerabilityThresholdEnabled
-            \tVulnerabilityThresholdResult: $vulnerabilityThresholdResult
-            \tVulnerabilityHighThreshold: $vulnerabilityHighThreshold
-            \tExcludeFolders: $excludeFolders
-            \tFilterPattern: $filterPattern
+            \tComment: ${ -> this.comment }
+            \tFailBuildOnNewResults: ${ -> this.failBuildOnNewResults }
+            \tFailBuildOnNewSeverity: ${ -> this.failBuildOnNewSeverity }
+            \tVulnerabilityThresholdEnabled: ${ -> this.vulnerabilityThresholdEnabled }
+            \tVulnerabilityThresholdResult: ${ -> this.vulnerabilityThresholdResult }
+            \tVulnerabilityHighThreshold: ${ -> this.vulnerabilityHighThreshold }
+            \tExcludeFolders: ${ -> this.excludeFolders }
+            \tFilterPattern: ${ -> this.filterPattern }
             """
         script.echo message
     }
@@ -158,8 +158,8 @@ class CxScan implements Serializable {
     /**
      * Use to enable vulnerability threshold
      * 
-     * @param failBuild set to true to fail build, otherwise build will be marked UNSTABLE
-     * @param highThreshold set to number of high results to trigger threshold 
+     * @param failBuild - set to true to fail build, otherwise build will be marked UNSTABLE
+     * @param highThreshold - set to number of high results to trigger threshold 
      */
     void enableVulnerabilityThreshold(boolean failBuild, int highThreshold) {
         this.vulnerabilityThresholdEnabled = true
