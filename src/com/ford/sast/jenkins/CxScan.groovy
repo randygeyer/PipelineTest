@@ -66,6 +66,10 @@ class CxScan implements Serializable {
     final String teamPath
     final String projectName
     
+    // OSA properties
+    String osaArchiveIncludePatterns = '*.zip, *.war, *.ear, *.tgz'
+    
+    
 
     public CxScan(script, String lob, String projectType, String applicationTeam, String applicationID,
             String applicationName, String componentName, String branch, String environment) {
@@ -102,13 +106,34 @@ class CxScan implements Serializable {
             \tSynchronous: $syncScan
             \tGeneratePDF: $generatePDF
             \tComment: $comment
-            \tExcludeFolders: $excludeFolders
-            \tFilterPattern: $filterPattern
             \tFailBuildOnNewResults: $failBuildOnNewResults
             \tFailBuildOnNewSeverity: $failBuildOnNewSeverity
             \tVulnerabilityThresholdEnabled: $vulnerabilityThresholdEnabled
             \tVulnerabilityThresholdResult: $vulnerabilityThresholdResult
             \tVulnerabilityHighThreshold: $vulnerabilityHighThreshold
+            \tExcludeFolders: $excludeFolders
+            \tFilterPattern: $filterPattern
+            """
+        script.echo message
+    }
+    
+    def printOsaConfig(String includeFolders, String excludeFolders) {
+
+        def message = """
+            Running OSA scan...
+            \tLineOfBusiness: $lob
+            \tProjectType: $projectType
+            \tApplicationID: $applicationID
+            \tApplicationName: $applicationName
+            \tApplicationTeam: $applicationTeam
+            \tComponentName: $componentName
+            \tBranch: $branch
+            \tEnvironment: $environment
+            \tTeamPath: $teamPath
+            \tProjectName: $projectName
+            \tIncludeFolders: $includeFolders
+            \tExcludeFolders: $excludeFolders
+            \tOsaArchiveIncludePatterns: $osaArchiveIncludePatterns
             """
         script.echo message
     }
@@ -188,10 +213,8 @@ class CxScan implements Serializable {
      * Perform a SAST scan; specify incremental, sync/async, PDF report 
      */
     def doScan(boolean incremental, boolean syncScan, boolean generatePDF) {
-        //init()
         printConfig(incremental, syncScan, generatePDF)
 
-        //TODO: preset id lookup
         script.steps.step([$class: 'CxScanBuilder',
             useOwnServerCredentials: false, 
             avoidDuplicateProjectScans: this.avoidDuplicateProjectScans, 
@@ -210,7 +233,43 @@ class CxScan implements Serializable {
             highThreshold: this.vulnerabilityHighThreshold,
             vulnerabilityThresholdEnabled: this.vulnerabilityThresholdEnabled,
             vulnerabilityThresholdResult: this.vulnerabilityThresholdResult,
-            waitForResultsEnabled: syncScan])
+            waitForResultsEnabled: syncScan,
+            osaEnabled: false])
+    }
+    
+    
+    // TODO: implement correctly for v8.8
+    def doOsaScan(String includeFolders, String excludeFolders) {
+        printOsaConfig(includeFolders, excludeFolders)
+        
+        script.echo 'WARNING: OSA scan not implemented yet....'
+
+        /*
+        script.steps.step([$class: 'CxScanBuilder',
+            useOwnServerCredentials: false, 
+            avoidDuplicateProjectScans: this.avoidDuplicateProjectScans, 
+            comment: this.comment,
+            teamPath: this.teamPath, 
+            incremental: false,
+            exclusionsSetting: 'job', 
+            excludeFolders: this.excludeFolders, 
+            filterPattern: this.filterPattern,
+            preset: ProjectTypes.lookupPreset().toString(), 
+            projectName: this.projectName, 
+            sourceEncoding: this.sourceEncoding,            // engine configuration
+            generatePdfReport: generatePDF,
+            failBuildOnNewResults: this.failBuildOnNewResults, 
+            failBuildOnNewSeverity: this.failBuildOnNewSeverity,
+            highThreshold: this.vulnerabilityHighThreshold,
+            vulnerabilityThresholdEnabled: this.vulnerabilityThresholdEnabled,
+            vulnerabilityThresholdResult: this.vulnerabilityThresholdResult,
+            waitForResultsEnabled: true,
+            excludeOpenSourceFolders: excludeFolders,
+            includeOpenSourceFolders: includeFolders,
+            osaArchiveIncludePatterns: this.osaArchiveIncludePatterns, 
+            osaEnabled: true, 
+            osaInstallBeforeScan: false])
+           */
     }
     
 }
