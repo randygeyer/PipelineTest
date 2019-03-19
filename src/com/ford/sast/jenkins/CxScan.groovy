@@ -83,7 +83,7 @@ class CxScan implements Serializable {
         this.componentName = componentName
         this.branch = branch
         this.environment = environment
-        this.teamPath = ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
+        this.teamPath = PATH_SEP + ORG + PATH_SEP + SP + PATH_SEP + lob + PATH_SEP + applicationTeam
         this.projectName = "${applicationName}-${componentName}-${branch}"
         this.comment = "ApplicationID: ${applicationID}; Jenkins build #: ${script.env.BUILD_NUMBER}"
     }
